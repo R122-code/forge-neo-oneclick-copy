@@ -1,0 +1,9 @@
+#oneclick_copy_txt2img[data-oneclick-state="ok"],
+#oneclick_copy_img2img[data-oneclick-state="ok"] {
+    outline: 2px solid currentColor;
+}
+
+#oneclick_copy_txt2img[data-oneclick-state="error"],
+#oneclick_copy_img2img[data-oneclick-state="error"] {
+    outline: 2px dashed currentColor;
+}
