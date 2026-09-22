@@ -24,7 +24,15 @@ txt2img / img2img の生成画像下のボタン列に **📌** が追加され�
 
 ## 初期コピー先
 
-`<Forge Neo本体>\outputs\oneclick-copy`
+Forge Neo の **txt2img画像保存フォルダー内**にある `oneclick-copy` です。
+
+標準設定なら:
+
+`<Forge Neo本体>\outputs\txt2img-images\oneclick-copy`
+
+Forge Neo 側で txt2img の出力先を変更している場合は、その出力先の中に `oneclick-copy` を作ります。
+
+旧版の `outputs\oneclick-copy` が設定値に残っている場合も、自動的に新しい初期位置へ切り替えます。
 
 ## コピー先の変更
 
