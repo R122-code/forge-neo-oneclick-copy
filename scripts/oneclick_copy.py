@@ -11,13 +11,35 @@ from modules.options import OptionInfo
 
 
 SETTING_KEY = "oneclick_copy_dir"
-DEFAULT_DIR = str(Path(paths.script_path) / "outputs" / "oneclick-copy")
+OLD_DEFAULT_DIR = str(Path(paths.script_path) / "outputs" / "oneclick-copy")
 MAX_BYTES = 256 * 1024 * 1024
 
 
+def _txt2img_copy_default() -> str:
+    base_raw = (
+        getattr(shared.opts, "outdir_samples", "")
+        or getattr(shared.opts, "outdir_txt2img_samples", "")
+        or str(Path(paths.script_path) / "outputs" / "txt2img-images")
+    )
+    base_raw = os.path.expandvars(os.path.expanduser(str(base_raw).strip()))
+    base = Path(base_raw)
+    if not base.is_absolute():
+        base = Path(paths.script_path) / base
+    return str((base / "oneclick-copy").resolve())
+
+
 def _resolve_destination() -> Path:
-    raw = getattr(shared.opts, SETTING_KEY, DEFAULT_DIR) or DEFAULT_DIR
+    default_dir = _txt2img_copy_default()
+    raw = getattr(shared.opts, SETTING_KEY, default_dir) or default_dir
     raw = os.path.expandvars(os.path.expanduser(str(raw).strip()))
+
+    # v1.0 の旧初期値は自動的に txt2img 側へ移行する。
+    try:
+        if Path(raw).resolve() == Path(OLD_DEFAULT_DIR).resolve():
+            raw = default_dir
+    except Exception:
+        pass
+
     path = Path(raw)
     if not path.is_absolute():
         path = Path(paths.script_path) / path
@@ -75,10 +97,10 @@ def on_ui_settings():
     shared.opts.add_option(
         SETTING_KEY,
         OptionInfo(
-            DEFAULT_DIR,
+            _txt2img_copy_default(),
             "1クリックコピー先フォルダー",
             section=section,
-        ).info("相対パスはForge Neo本体フォルダー基準。変更は保存後すぐ反映されます。"),
+        ).info("初期値は txt2img 画像フォルダー内の oneclick-copy。変更は保存後すぐ反映されます。"),
     )
 
 
